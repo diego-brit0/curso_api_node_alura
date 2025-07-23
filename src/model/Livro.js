@@ -5,7 +5,8 @@ const LivroSchema = new mongoose.Schema({
     titulo: { type: String, required:true },
     editora: { type: mongoose.Schema.Types.String},
     preco: { type: Number },
-    paginas: { type: Number }
+    paginas: { type: Number },
+    
 }, { versionKey: false } );
 
 const livro = mongoose.model("livros", LivroSchema);
