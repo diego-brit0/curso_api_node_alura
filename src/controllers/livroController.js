@@ -6,6 +6,7 @@ class LivroController {
     static async listarLivros(req, res) {
         try {
             const listaLivros = await livro.find({});
+            //const listaLivros = await livro.find({}).populate("autor").exec(); // <= caso esteja usando o referencing de autor em livro necessario popular os autores para trazer suas informacoes no banco de dados NoSQL
             res.status(200).json(listaLivros);
         } catch (erro) {
             res.status(500).json({ message: `${erro.message} - falha na requisicao`})
