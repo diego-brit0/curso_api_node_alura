@@ -1,4 +1,5 @@
 import livro from "../model/Livro.js";
+import { autor } from "../model/Autor.js"
 
 class LivroController {
     //static permite acessar metodos de class sem necessidade de instanciar a classe
@@ -12,9 +13,12 @@ class LivroController {
     }
 
     static async cadastrarLivro(req, res) {
+        const novoLivro = req.body 
         try {
-            const novoLivro = await livro.create(req.body);
-            res.status(201).json({message: "Criado com sucesso", livro: novoLivro})
+            const autorEncontrado = await autor.findById(novoLivro.autor);
+            const livroCompleto = { ...novoLivro, autor: { ...autorEncontrado._doc } };
+            const livroCriado = await livro.create(livroCompleto);
+            res.status(201).json({message: "Criado com sucesso", livro: livroCriado})
         } catch (erro) {
             res.status(500).json({message: `${erro.message} - falha ao cadastrar livro` })
         }
@@ -46,6 +50,16 @@ class LivroController {
             const id = req.params.id;
             await livro.findByIdAndDelete(id);
             res.status(200).json({message: "livro excluido com sucesso"});
+        }catch(erro){
+            res.status(500).json({message: `${erro.message} - falha na requisicao`});
+        }
+    }
+
+    static async listarLivrosPorEditora(req, res) {
+        const pEditora = req.query.editora;
+        try{
+            const livrosPorEditora = await livro.find({editora: pEditora});
+            res.status(200).json(livrosPorEditora);
         }catch(erro){
             res.status(500).json({message: `${erro.message} - falha na requisicao`});
         }
